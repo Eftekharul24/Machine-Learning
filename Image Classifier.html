@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+<script src="https://unpkg.com/ml5@latest/dist/ml5.min.js"></script>
+<body>
+<h1>Image Classification</h1>
+<h2>With MobileNet and ml5.js</h2>
+<div id="result">Scanning ...</div>
+<img id="image" src="pic1.jpg" width="100%">
+
+<script>
+// Initialize Image Classifier with MobileNet.
+const classifier =  ml5.imageClassifier('MobileNet');
+classifier.classify(document.getElementById("image"), gotResult);
+
+// Function to run when results arrive
+function gotResult(error, results) {
+  const element = document.getElementById("result");
+  if (error) {
+    element.innerHTML = error;
+  } else {
+    let num = results[0].confidence * 100;
+    element.innerHTML = results[0].label + "<br>Confidence: " + num.toFixed(2) + "%";
+  }
+}
+</script>
+</body>
+</html>
