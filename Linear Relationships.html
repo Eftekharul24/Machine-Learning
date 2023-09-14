@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+<div id="myPlot" style="width:100%;max-width:700px"></div>
+
+<script>
+const xArray = [50,60,70,80,90,100,110,120,130,140,150];
+const yArray = [7,8,8,9,9,9,10,11,14,14,15];
+
+// Calculate Slope
+let xSum = xArray.reduce(function(a, b){return a + b;}, 0);
+let ySum = yArray.reduce(function(a, b){return a + b;}, 0);
+let slope = ySum / xSum;
+
+// Generate values
+const xValues = [];
+const yValues = [];
+for (let x = 50; x <= 150; x += 1) {
+  xValues.push(x);
+  yValues.push(x * slope);
+}
+
+const data = [
+  {x:xArray, y:yArray, mode:"markers"},
+  {x:xValues, y:yValues, mode:"line"}
+];
+
+const layout = {
+  xaxis: {range: [40, 160], title: "Square Meters"},
+  yaxis: {range: [5, 16], title: "Price in Millions"},  
+  title: "House Prices vs. Size"
+};
+
+Plotly.newPlot("myPlot", data, layout);
+</script>
+
+</body>
+</html>
