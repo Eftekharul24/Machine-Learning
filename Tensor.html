@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.5.1/dist/tfjs-vis.umd.min.js"></script>
+<body>
+
+<h2>TensorFlow Visor</h2>
+<div id="demo"></div>
+
+<script>
+
+const surface = document.getElementById('demo');
+const series = ['First', 'Second'];
+
+const serie1 = []; 
+const serie2 = [];
+for (let i = 0; i < 100; i++) {
+  serie1[i] = {x:i, y:Math.random() * 100};
+  serie2[i] = {x:i, y:Math.random() * 100};
+}
+
+const data = {values: [serie1, serie2], series}
+tfvis.render.scatterplot(surface, data);
+
+const surface = document.getElementById('demo');
+
+const data = [
+  {index: 0, value: 100},
+  {index: 1, value: 200},
+  {index: 2, value: 150},
+  {index: 3, value: 250},
+];
+
+tfvis.render.barchart(surface, data);
+
+const surface = document.getElementById('demo');
+
+let values = [
+  {x: 1, y: 20},
+  {x: 2, y: 30},
+  {x: 3, y: 15},
+  {x: 4, y: 12}
+];
+
+tfvis.render.linechart(surface, {values});
+
+</script>
+</body>
+</html>
