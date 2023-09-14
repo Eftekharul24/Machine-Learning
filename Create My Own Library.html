@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+<script src="myailib.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<body>
+
+<div id="myPlot" width="400px" height="400px" style="width:100%;max-width:400px;border:1px solid black"></div>
+
+<p>Train me to find the line of best fit:</p>
+<p>
+<button onclick="train(100)">100 times</button>
+<button onclick="train(200)">200 times</button>
+<button onclick="train(300)">300 times</button>
+<button onclick="train(500)">500 times</button>
+</p>
+
+<div id="demo"></div>
+<script>
+
+// Create a Trainer Object
+const xArray = [32,53,61,47,59,55,52,39,48,52,45,54,44,58,56,48,44,60];
+const yArray = [31,68,62,71,87,78,79,59,75,71,55,82,62,75,81,60,82,97];
+
+let myTrainer = new Trainer(xArray, yArray);
+
+// Generate values
+let weight = 0.1 
+let xValues = [];
+let yValues = [];
+for (let x = 0; x <= 100; x += 10) {
+  yValues.push(x*weight);
+  xValues.push(x);
+}
+
+let data = [
+  {x:xArray, y:yArray, mode:"markers"},
+  {x:xValues, y:yValues, mode:"lines"}
+];
+
+// Define Layout
+const layout = {
+  xaxis: {range: [0,100], title: "Square Meters"},
+  yaxis: {range: [0,100], title: "Price in Millions"},
+  title: "House Prices vs. Size"}
+;
+
+// Display using Plotly
+Plotly.newPlot("myPlot", data, layout);
+
+function train(iter) {
+  myTrainer.train(iter);
+  // Display Guessed Results
+  document.getElementById("demo").innerHTML = 
+  "<p>Slope: " + myTrainer.weight.toFixed(2) + "</p>" +
+  "<p>Bias:  " + myTrainer.bias.toFixed(2) + "</p>" +
+  "<p>Cost:  " + myTrainer.cost.toFixed(2);
+
+let xValues = [];
+let yValues = [];
+for (let x = 0; x <= 100; x += 10) {
+  yValues.push(x*myTrainer.weight);
+  xValues.push(x);
+}
+data = [
+  {x:xArray, y:yArray, mode:"markers"},
+  {x:xValues, y:yValues, mode:"lines"}
+];
+
+Plotly.newPlot("myPlot", data, layout);
+}
+
+</script>
+
+</body>
+</html>
