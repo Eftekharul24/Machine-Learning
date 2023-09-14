@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<script src="myplotlib.js"></script>
+
+<body>
+<canvas id="myCanvas" width="400px" height="400px" style="width:100%;max-width:400px;border:1px solid black"></canvas>
+
+<script>
+// Initiate Values
+const numPoints = 500;
+const learningRate = 0.00001;
+
+// Create a Plotter
+const plotter = new XYPlotter("myCanvas");
+plotter.transformXY();
+const xMax = plotter.xMax;
+const yMax = plotter.yMax;
+const xMin = plotter.xMin;
+const yMin = plotter.yMin;
+
+// Create Random XY Points
+const xPoints = [];
+const yPoints = [];
+for (let i = 0; i < numPoints; i++) {
+  xPoints[i] = Math.random() * xMax;
+  yPoints[i] = Math.random() * yMax;
+}
+
+// Line Function
+function f(x) {
+  return x * 1.2 + 50;
+}
+
+//Plot the Line
+plotter.plotLine(xMin, f(xMin), xMax, f(xMax), "black");
+
+// Compute Desired Answers
+const desired = [];
+for (let i = 0; i < numPoints; i++) {
+  desired[i] = 0;
+  if (yPoints[i] > f(xPoints[i])) {desired[i] = 1}
+}
+
+// Create a Perceptron
+const ptron = new Perceptron(2, learningRate);
+
+// Train the Perceptron
+for (let j = 0; j <= 10000; j++) {
+  for (let i = 0; i < numPoints; i++) {
+    ptron.train([xPoints[i], yPoints[i]], desired[i]);
+  }
+}
+
+// Display the Result
+for (let i = 0; i < numPoints; i++) {
+  const x = xPoints[i];
+  const y = yPoints[i];
+  let guess = ptron.activate([x, y, ptron.bias]);
+  let color = "black";
+  if (guess == 0) color = "blue";
+  plotter.plotPoint(x, y, color);
+}
+
+// Perceptron Object ---------------------
+function Perceptron(no, learningRate = 0.00001) {
+
+// Set Initial Values
+this.learnc = learningRate;
+this.bias = 1;
+
+// Compute Random Weights
+this.weights = [];
+for (let i = 0; i <= no; i++) {
+  this.weights[i] = Math.random() * 2 - 1;
+}
+
+// Activate Function
+this.activate = function(inputs) {
+  let sum = 0;
+  for (let i = 0; i < inputs.length; i++) {
+    sum += inputs[i] * this.weights[i];
+  } 
+  if (sum > 0) {return 1} else {return 0}
+}
+
+// Train Function
+this.train = function(inputs, desired) {
+  inputs.push(this.bias);
+  let guess = this.activate(inputs);
+  let error = desired - guess;
+  if (error != 0) {
+    for (let i = 0; i < inputs.length; i++) {
+      this.weights[i] += this.learnc * error * inputs[i];         
+    }
+  }
+}
+
+// End Perceptron Object
+}
+</script>
+</body>
+</html>
